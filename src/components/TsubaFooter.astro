@@ -1,0 +1,23 @@
+---
+import { Image } from "astro:assets";
+import icon from "../assets/tsuba/icon.png";
+import type { Lang } from "../content/site";
+import { homePaths, tsuba, tsubaLinks, tsubaPaths } from "../content/tsuba";
+
+interface Props { lang: Lang; privacy?: boolean }
+const { lang, privacy = false } = Astro.props;
+const t = tsuba[lang];
+const year = new Date().getFullYear();
+---
+<footer class="ts-foot">
+  <div class="ts-wrap ts-foot-grid">
+    <a class="ts-name" href={privacy ? tsubaPaths.home[lang] : "#top"}><Image src={icon} alt="" width={28} height={28} densities={[1, 2]} />Tsuba</a>
+    <nav aria-label={lang === "it" ? "Piè di pagina" : "Footer"}>
+      <a href={tsubaPaths.privacy[lang]}>{t.footer.privacy}</a>
+      <a href={tsubaLinks.releases} target="_blank" rel="noreferrer">{t.footer.releases}</a>
+      <a href={homePaths[lang]}>{t.nav.home}</a>
+    </nav>
+    <p>{t.footer.note}</p>
+    <p>© {year} Marco Brotto</p>
+  </div>
+</footer>

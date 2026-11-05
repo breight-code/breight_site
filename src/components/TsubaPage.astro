@@ -1,0 +1,295 @@
+---
+import { Image } from "astro:assets";
+import icon from "../assets/tsuba/icon.png";
+import TsubaTitle from "./TsubaTitle";
+import HeroShot from "./HeroShot";
+import GalleryPan from "./GalleryPan";
+import MergeDemo from "./MergeDemo";
+import CommitDemo from "./CommitDemo";
+import TsubaShot from "./TsubaShot.astro";
+import TsubaHeader from "./TsubaHeader.astro";
+import TsubaFooter from "./TsubaFooter.astro";
+import type { Lang } from "../content/site";
+import { palettes, tsuba, tsubaLinks, tsubaPaths } from "../content/tsuba";
+import "../styles/tsuba.css";
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = tsuba[lang];
+const download = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11m-5-5 5 5 5-5M5 20h14"/></svg>`;
+
+// Hero backdrop: a commit graph drawn like the app's, newest at the top. Lanes are [lane colour, path, first y].
+const lanes: [number, string, number][] = [
+  [0, "M1180 -20V920", 0],
+  [2, "M1300 -20V560C1300 600 1180 600 1180 640", 0],
+  [6, "M1360 40V200C1360 235 1300 235 1300 270", 40],
+  [1, "M1180 150C1180 185 1240 185 1240 220V430C1240 465 1180 465 1180 500", 150],
+  [3, "M1180 260C1180 295 1120 295 1120 330V700C1120 735 1180 735 1180 770", 260],
+  [4, "M1300 300C1300 335 1360 335 1360 370V480C1360 515 1300 515 1300 540", 300],
+  [5, "M1120 560C1120 595 1060 595 1060 630V920", 560],
+];
+// Commits as [x, y, lane colour, merge]: merge commits are rings, like in the app.
+const nodes: [number, number, number, boolean?][] = [
+  [1180, 40, 0], [1180, 150, 0, true], [1180, 260, 0, true], [1180, 400, 0], [1180, 500, 0], [1180, 640, 0], [1180, 770, 0], [1180, 860, 0],
+  [1240, 230, 1], [1240, 300, 1], [1240, 380, 1],
+  [1300, 20, 2], [1300, 130, 2], [1300, 270, 2, true], [1300, 420, 2], [1300, 540, 2],
+  [1120, 340, 3], [1120, 440, 3], [1120, 560, 3], [1120, 660, 3],
+  [1360, 380, 4], [1360, 450, 4],
+  [1060, 640, 5], [1060, 740, 5], [1060, 840, 5],
+  [1360, 70, 6], [1360, 140, 6],
+];
+const at = (y: number) => `${(0.15 + Math.max(0, y) / 900).toFixed(2)}s`;
+---
+<div class="tsuba">
+  <TsubaHeader lang={lang} />
+
+  <main id="main">
+    <section class="ts-hero" id="top">
+      <svg class="ts-lanes" viewBox="0 0 1440 900" preserveAspectRatio="xMaxYMin slice" aria-hidden="true" focusable="false">
+        {lanes.map(([c, d, y]) => <path d={d} pathLength="1" style={`--c:var(--ts-lane-${c});--d:${at(y)}`} />)}
+        <g class="pulses">{lanes.map(([c, d]) => <path class="pulse" d={d} pathLength="1" style={`--c:var(--ts-lane-${c})`} />)}</g>
+        {nodes.map(([x, y, c, merge]) => <circle class={merge ? "m" : undefined} cx={x} cy={y} r={merge ? 7 : 6} style={`--c:var(--ts-lane-${c});--d:${at(y - 40)}`} />)}
+      </svg>
+      <div class="ts-wrap ts-hero-grid">
+        <TsubaTitle client:load word="Tsuba" label={t.hero.h1} />
+        <div>
+          <p class="ts-lead" data-reveal style="--i:1">{t.hero.lead}</p>
+          <div class="ts-actions" data-reveal style="--i:2">
+            <a class="ts-btn" href={tsubaLinks.download}><Fragment set:html={download} />{t.hero.primary}</a>
+            <a class="ts-link" href="#merge">{t.hero.secondary}</a>
+          </div>
+          <p class="ts-note" data-reveal style="--i:3">{t.hero.req}</p>
+        </div>
+      </div>
+      <div class="ts-wrap ts-shot-stage">
+        <HeroShot client:load>
+          <div class="ts-frame"><TsubaShot lang={lang} shot="history" eager sizes="(min-width: 1376px) 1280px, calc(100vw - 32px)" /></div>
+        </HeroShot>
+      </div>
+    </section>
+
+    <section class="ts-sec" id="features" aria-labelledby="story-title">
+      <div class="ts-wrap">
+        <header class="ts-head">
+          <h2 id="story-title" data-reveal>{t.story.heading}</h2>
+          <p data-reveal style="--i:1">{t.story.text}</p>
+        </header>
+        <div class="ts-story">
+          <ol class="ts-steps">
+            {t.story.steps.map((s, i) => (
+              <li class="ts-step" data-step={i} data-on={i === 0 ? "" : undefined}>
+                <p class="ts-cmd"><code>{s.cmd}</code></p>
+                <h3>{s.title}</h3>
+                <p>{s.text}</p>
+                <ul class="ts-tags">{s.tags.map((tag) => <li>{tag}</li>)}</ul>
+                <div class="ts-frame ts-inline"><TsubaShot lang={lang} shot={s.shot} sizes="calc(100vw - 32px)" /></div>
+              </li>
+            ))}
+          </ol>
+          <div class="ts-stage">
+            <div class="ts-stage-box">
+              {t.story.steps.map((s, i) => (
+                <div class="ts-frame" data-on={i === 0 ? "" : undefined}><TsubaShot lang={lang} shot={s.shot} sizes="(min-width: 1376px) 760px, 58vw" /></div>
+              ))}
+            </div>
+          </div>
+        </div>
+        <ul class="ts-more">
+          {t.story.more.map((item, i) => (
+            <li data-reveal style={`--i:${i}`}>
+              <h3>{item.title}</h3>
+              <p>{item.text}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <section class="ts-gallery" id="gallery" aria-labelledby="gallery-title">
+      <GalleryPan client:idle>
+        <header slot="head" class="ts-wrap ts-head">
+          <h2 id="gallery-title" data-reveal>{t.gallery.heading}</h2>
+          <p data-reveal style="--i:1">{t.gallery.text}</p>
+        </header>
+        {t.gallery.items.map((item) => (
+          <figure class="ts-card" data-small={item.shot === "quick-launch" ? "" : undefined}>
+            <div class="ts-frame"><TsubaShot lang={lang} shot={item.shot} sizes="(min-width: 1420px) 880px, (min-width: 900px) 62vw, 84vw" /></div>
+            <figcaption><b>{item.title}</b> {item.text}</figcaption>
+          </figure>
+        ))}
+      </GalleryPan>
+    </section>
+
+    <section class="ts-sec" id="merge" aria-labelledby="merge-title">
+      <div class="ts-wrap">
+        <header class="ts-head">
+          <h2 id="merge-title" data-reveal>{t.merge.heading}</h2>
+          <p data-reveal style="--i:1">{t.merge.lead}</p>
+        </header>
+        <MergeDemo client:visible t={t.merge} />
+      </div>
+    </section>
+
+    <section class="ts-sec" id="ai" aria-labelledby="ai-title">
+      <div class="ts-wrap ts-ai">
+        <div>
+          <header class="ts-head">
+            <h2 id="ai-title" data-reveal>{t.ai.heading}</h2>
+            <p data-reveal style="--i:1">{t.ai.lead}</p>
+          </header>
+          <dl class="ts-list">
+            {t.ai.items.map((item, i) => (
+              <div data-reveal style={`--i:${i}`}>
+                <dt>{item.title}</dt>
+                <dd>{item.text}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+        <figure class="ts-commit">
+          <CommitDemo client:visible t={t.commit} />
+          <figcaption class="sr-only">{t.commit.label}</figcaption>
+        </figure>
+      </div>
+      <div class="ts-wrap ts-native">
+        <h3 data-reveal>{t.native.heading}</h3>
+        <dl class="ts-list ts-list-4">
+          {t.native.items.map((item, i) => (
+            <div data-reveal style={`--i:${i}`}>
+              <dt>{item.title}</dt>
+              <dd>{item.text}</dd>
+            </div>
+          ))}
+        </dl>
+        <p><a class="ts-link" href={tsubaPaths.privacy[lang]}>{t.native.privacy}</a></p>
+      </div>
+    </section>
+
+    <section class="ts-sec" id="themes" aria-labelledby="themes-title">
+      <div class="ts-wrap">
+        <header class="ts-head">
+          <h2 id="themes-title" data-reveal>{t.themes.heading}</h2>
+          <p data-reveal style="--i:1">{t.themes.lead}</p>
+        </header>
+        <ul class="ts-tiles" aria-label={t.themes.label}>
+          {palettes.map((p) => (
+            <li>
+              <button
+                type="button"
+                class="ts-tile"
+                data-theme={p.id}
+                aria-pressed={p.id === "akagane" ? "true" : "false"}
+                style={`--b:${p.dark[0]};--bd:${p.dark[3]};--t:${p.dark[4]};--lb:${p.light[0]};--lt:${p.light[4]};--la:${p.light[6]}`}
+              >
+                <span class="ts-tile-name">{p.name[lang]}</span>
+                <span class="ts-chips" aria-hidden="true">{p.dark.slice(6).map((c) => <i style={`background:${c}`} />)}</span>
+                <span class="ts-twin" aria-hidden="true"><i /><i /></span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <div class="ts-light">
+      <section class="ts-sec" id="download" aria-labelledby="download-title">
+        <div class="ts-wrap ts-download">
+          <div>
+            <Image class="ts-dl-icon" src={icon} alt="" width={112} height={112} densities={[1, 2]} />
+            <h2 id="download-title" data-reveal>{t.download.heading}</h2>
+            <p class="ts-lead" data-reveal style="--i:1">{t.download.lead}</p>
+            <div data-reveal style="--i:2"><a class="ts-btn ts-btn-lg" href={tsubaLinks.download}><Fragment set:html={download} />{t.download.button}</a></div>
+            <p class="ts-note" data-reveal style="--i:3">{t.download.req}</p>
+          </div>
+          <div>
+            <ol class="ts-first">
+              {t.download.steps.map((step, i) => (
+                <li data-reveal style={`--i:${i}`}>
+                  <span class="num" aria-hidden="true">{i + 1}</span>
+                  <div>
+                    <p set:html={step}></p>
+                    {i === 2 && <pre class="ts-term"><code>{t.download.command}</code></pre>}
+                  </div>
+                </li>
+              ))}
+            </ol>
+            <p class="ts-note ts-sparkle">{t.download.sparkle}</p>
+            <a class="ts-link" href={tsubaLinks.releases} target="_blank" rel="noreferrer">{t.download.releases}</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="ts-sec ts-faq" id="faq" aria-labelledby="faq-title">
+        <div class="ts-wrap ts-faq-grid">
+          <h2 id="faq-title" data-reveal>{t.faq.heading}</h2>
+          <div>
+            {t.faq.items.map((item) => (
+              <details>
+                <summary>{item.q}</summary>
+                <p>{item.a}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <TsubaFooter lang={lang} />
+</div>
+
+<script>
+  // Story: the step crossing the middle of the screen picks the screenshot on the sticky stage.
+  const steps = document.querySelectorAll<HTMLElement>(".ts-step");
+  const shots = document.querySelectorAll<HTMLElement>(".ts-stage .ts-frame");
+  const story = new IntersectionObserver(
+    (entries) =>
+      entries.forEach((e) => {
+        if (!e.isIntersecting) return;
+        const active = Number((e.target as HTMLElement).dataset.step);
+        steps.forEach((s, i) => s.toggleAttribute("data-on", i === active));
+        shots.forEach((s, i) => s.toggleAttribute("data-on", i === active));
+      }),
+    { rootMargin: "-50% 0px -50% 0px" },
+  );
+  steps.forEach((s) => story.observe(s));
+
+  // Hero graph: every lane sends light pulses at random, and random commits pop. Nothing runs off screen or in a hidden tab.
+  const graph = document.querySelector<SVGSVGElement>(".ts-lanes");
+  if (graph && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    const rnd = (a: number, b: number) => a + Math.random() * (b - a);
+    const roll = (p: SVGPathElement, first = false) => {
+      p.classList.remove("go");
+      p.getBoundingClientRect(); // flush styles so re-adding the class restarts the animation
+      p.style.setProperty("--dur", `${rnd(4, 11).toFixed(1)}s`);
+      p.style.setProperty("--wait", `${(first ? rnd(2.4, 8) : rnd(0, 6)).toFixed(1)}s`);
+      p.style.setProperty("--len", Math.random() < 0.4 ? rnd(0.04, 0.14).toFixed(3) : "0.05");
+      p.classList.add("go");
+    };
+    graph.querySelectorAll<SVGPathElement>(".pulse").forEach((p) => {
+      p.addEventListener("animationend", () => roll(p));
+      roll(p, true);
+    });
+
+    const nodes = [...graph.querySelectorAll("circle")];
+    let live = true;
+    const pop = () => {
+      if (live) {
+        nodes[Math.floor(Math.random() * nodes.length)].animate(
+          [{}, { scale: 1.6, filter: "drop-shadow(0 0 6px var(--c))", offset: 0.35 }, {}],
+          { duration: 700, easing: "ease-out" },
+        );
+      }
+      setTimeout(pop, rnd(1200, 3000));
+    };
+    setTimeout(pop, 2500);
+
+    let visible = true;
+    const sync = () => {
+      live = visible && !document.hidden;
+      graph.classList.toggle("idle", !live);
+    };
+    new IntersectionObserver(([e]) => ((visible = e.isIntersecting), sync())).observe(graph);
+    document.addEventListener("visibilitychange", sync);
+  }
+</script>

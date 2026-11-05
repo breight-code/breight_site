@@ -1,0 +1,60 @@
+---
+import { Image } from "astro:assets";
+import icon from "../assets/tsuba/icon.png";
+import type { Lang } from "../content/site";
+import { homePaths, paletteKeys, palettes, tsuba, tsubaPaths } from "../content/tsuba";
+
+interface Props { lang: Lang; privacy?: boolean }
+const { lang, privacy = false } = Astro.props;
+const t = tsuba[lang];
+const other: Lang = lang === "it" ? "en" : "it";
+const switchHref = privacy ? tsubaPaths.privacy[other] : tsubaPaths.home[other];
+const top = privacy ? tsubaPaths.home[lang] : "#top";
+const themes = palettes.map(({ id, dark, light, lanes }) => ({ id, dark, light, lanes }));
+---
+<script is:inline define:vars={{ themes, keys: paletteKeys }}>
+  // Applies the stored theme before first paint; a theme tile swaps it and remembers the choice.
+  const root = document.documentElement;
+  const apply = (id) => {
+    const p = themes.find((x) => x.id === id) || themes[0];
+    p.dark.forEach((c, i) => root.style.setProperty("--ts-" + keys[i], c));
+    p.light.forEach((c, i) => root.style.setProperty("--ts-l-" + keys[i], c));
+    p.lanes.forEach((c, i) => root.style.setProperty("--ts-lane-" + i, c));
+    document.querySelector('meta[name="theme-color"]')?.setAttribute("content", p.dark[0]);
+    document.querySelectorAll("[data-theme]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.theme === p.id)));
+    return p.id;
+  };
+  let saved = null;
+  try { saved = localStorage.getItem("tsuba-theme"); } catch {}
+  if (saved) {
+    apply(saved);
+    // The tiles are parsed after this script, so their pressed state is synced once the page is read.
+    document.addEventListener("DOMContentLoaded", () => apply(saved));
+  }
+  document.addEventListener("click", (e) => {
+    const tile = e.target instanceof Element && e.target.closest("[data-theme]");
+    if (!tile) return;
+    root.classList.add("ts-fade");
+    const id = apply(tile.dataset.theme);
+    try { localStorage.setItem("tsuba-theme", id); } catch {}
+  });
+</script>
+<a class="skip" href="#main">{lang === "it" ? "Vai al contenuto" : "Skip to content"}</a>
+<header class="ts-bar">
+  <div class="ts-brand">
+    <a class="ts-name" href={top}><Image src={icon} alt="" width={30} height={30} densities={[1, 2]} loading="eager" />Tsuba</a>
+    <a class="ts-by" href={homePaths[lang]}>{t.nav.by}</a>
+  </div>
+  <nav aria-label={lang === "it" ? "Principale" : "Main"}>
+    {!privacy && (
+      <>
+        <a class="ts-hide-sm" href="#features">{t.nav.features}</a>
+        <a class="ts-hide-sm" href="#merge">{t.nav.merge}</a>
+        <a class="ts-hide-sm" href="#themes">{t.nav.themes}</a>
+        <a class="ts-hide-sm" href="#faq">{t.nav.faq}</a>
+      </>
+    )}
+    <a href={switchHref} hreflang={other} lang={other}>{t.nav.other}</a>
+    <a class="ts-pill" href={privacy ? tsubaPaths.home[lang] : "#download"}>{privacy ? t.nav.back : t.nav.pill}</a>
+  </nav>
+</header>

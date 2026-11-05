@@ -107,7 +107,9 @@ function Fragment({ slug, live }: { slug: string; live: boolean }) {
   return slug === "tsuba" ? <TsubaFrag live={live} /> : <ShakerFrag live={live} />;
 }
 
-function ProjectBlock({ p, labels, active, onActive }: { p: Project; labels: { live: string; code: string; privateCode: string }; active: boolean; onActive: () => void }) {
+type Labels = { live: string; code: string; privateCode: string; page: string };
+
+function ProjectBlock({ p, labels, active, onActive }: { p: Project; labels: Labels; active: boolean; onActive: () => void }) {
   const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref, { amount: 0.55 });
   useEffect(() => { if (inView) onActive(); }, [inView, onActive]);
@@ -118,6 +120,12 @@ function ProjectBlock({ p, labels, active, onActive }: { p: Project; labels: { l
       <p className="status" data-reveal style={{ ["--i" as string]: 1 }}>{p.kind}, {p.status.toLowerCase()}</p>
       <ul className="tags" data-reveal style={{ ["--i" as string]: 2 }}>{p.stack.map((s) => <li key={s}>{s}</li>)}</ul>
       <div className="actions" data-reveal style={{ ["--i" as string]: 3 }}>
+        {p.page && (
+          <a className="btn" href={p.page}>
+            {labels.page}
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg>
+          </a>
+        )}
         {p.live && (
           <a className="btn" href={p.live} target="_blank" rel="noreferrer">
             {labels.live}
@@ -132,7 +140,7 @@ function ProjectBlock({ p, labels, active, onActive }: { p: Project; labels: { l
   );
 }
 
-export default function Work({ items, labels }: { items: Project[]; labels: { live: string; code: string; privateCode: string } }) {
+export default function Work({ items, labels }: { items: Project[]; labels: Labels }) {
   const [active, setActive] = useState(0);
   const reduce = useReducedMotion();
   const current = items[active];

@@ -1,0 +1,49 @@
+---
+import TsubaHeader from "./TsubaHeader.astro";
+import TsubaFooter from "./TsubaFooter.astro";
+import { type Lang } from "../content/site";
+import { tsuba } from "../content/tsuba";
+import "../styles/tsuba.css";
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const p = tsuba[lang].privacy;
+---
+<div class="tsuba">
+  <TsubaHeader lang={lang} privacy />
+
+  <main id="main" class="ts-light">
+    <article class="ts-wrap ts-doc" aria-labelledby="doc-title">
+      <h1 id="doc-title">{p.h1}</h1>
+      <p set:html={p.intro}></p>
+
+      <h2>{p.netHeading}</h2>
+      <div class="ts-table">
+        <table>
+          <thead>
+            <tr>{p.table.head.map((h) => <th scope="col">{h}</th>)}</tr>
+          </thead>
+          <tbody>
+            {p.table.rows.map((row) => (
+              <tr>{row.map((cell, i) => <td data-label={p.table.head[i]}>{cell}</td>)}</tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p>{p.telemetry}</p>
+
+      <h2>{p.stayHeading}</h2>
+      <ul>
+        {p.stay.map((item) => <li set:html={item}></li>)}
+      </ul>
+
+      <h2>{p.offHeading}</h2>
+      {p.off.map((item) => <p set:html={item}></p>)}
+
+      <h2>{p.checkHeading}</h2>
+      <p set:html={p.check}></p>
+    </article>
+  </main>
+
+  <TsubaFooter lang={lang} privacy />
+</div>

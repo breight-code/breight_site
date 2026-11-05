@@ -1,0 +1,9 @@
+---
+import Base from "../../../layouts/Base.astro";
+import TsubaPrivacy from "../../../components/TsubaPrivacy.astro";
+import { tsuba, tsubaPaths, tsubaSchema } from "../../../content/tsuba";
+const t = tsuba.en;
+---
+<Base lang="en" title={t.privacyMeta.title} description={t.privacyMeta.description} alternates={tsubaPaths.privacy} image="/tsuba/og.png" imageAlt={t.privacyMeta.title} jsonLd={tsubaSchema("en", "privacy")} themeColor="#121314">
+  <TsubaPrivacy lang="en" />
+</Base>

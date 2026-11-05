@@ -16,6 +16,10 @@ export const developerCode = `class Developer {
   ];
 }`;
 
+export const markSvg = `<svg class="mark" viewBox="10 8 46 46" aria-hidden="true"><path d="M17 12v24" stroke="currentColor" stroke-width="7" stroke-linecap="round"/><circle cx="27.5" cy="36" r="10.5" fill="none" stroke="currentColor" stroke-width="7"/><rect class="mark-cursor" x="42" y="43" width="11" height="6" rx="1.5" fill="currentColor"/></svg>`;
+
+export const arrowSvg = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg>`;
+
 export type Project = {
   slug: string;
   title: string;
@@ -25,6 +29,7 @@ export type Project = {
   stack: string[];
   live?: string;
   code?: string;
+  page?: string;
 };
 
 export type Lane = { word: string; title: string; text: string; tags: string[] };
@@ -36,18 +41,18 @@ type Copy = {
   intro: { lead: string };
   skills: { title: string; text: string; lanes: Lane[] };
   terminal: { title: string; text: string; hint: string; welcome: string };
-  work: { title: string; text: string; live: string; code: string; privateCode: string; items: Project[] };
+  work: { title: string; text: string; live: string; code: string; privateCode: string; page: string; items: Project[] };
   contact: { title: string; text: string; rows: { label: string; value: string; href?: string }[]; mailSubject: string };
   footer: { note: string; place: string; top: string };
 };
 
 const projectsEn: Project[] = [
-  { slug: "tsuba", title: "Tsuba", kind: "macOS app", status: "Version 0.8", description: "The native Git client for Mac. Commit graph, line staging, interactive rebase and 3-way merge in one fast window, with AI commit messages that stay on device.", stack: ["Swift", "SwiftUI", "Git", "Apple Intelligence"] },
+  { slug: "tsuba", title: "Tsuba", kind: "macOS app", status: "Version 0.8", description: "The native Git client for Mac. Commit graph, line staging, interactive rebase and 3-way merge in one fast window, with AI commit messages that stay on device.", stack: ["Swift", "SwiftUI", "Git", "Apple Intelligence"], page: "/en/tsuba/" },
   { slug: "dio-shaker", title: "Dio Shaker Interceptor", kind: "Flutter package", status: "Published on pub.dev", description: "A Flutter package for the Dio HTTP client: shake the device to open a debugger with every request and response.", stack: ["Flutter", "Dart", "Networking", "Debugging"], live: "https://pub.dev/packages/dio_shaker_interceptor", code: links.github },
 ];
 
 const projectsIt: Project[] = [
-  { ...projectsEn[0], kind: "App macOS", status: "Versione 0.8", description: "Il client Git nativo per Mac. Grafo dei commit, staging per riga, rebase interattivo e merge a tre vie in una finestra veloce, con messaggi di commit AI che restano sul dispositivo." },
+  { ...projectsEn[0], kind: "App macOS", status: "Versione 0.8", description: "Il client Git nativo per Mac. Grafo dei commit, staging per riga, rebase interattivo e merge a tre vie in una finestra veloce, con messaggi di commit AI che restano sul dispositivo.", page: "/tsuba/" },
   { ...projectsEn[1], kind: "Package Flutter", status: "Pubblicato su pub.dev", description: "Un package Flutter per il client HTTP Dio: scuoti il device e si apre un debugger con ogni richiesta e risposta." },
 ];
 
@@ -93,7 +98,7 @@ export const copy: Record<Lang, Copy> = {
       hint: "Type a command",
       welcome: "breight-code shell. Type help to list commands.",
     },
-    work: { title: "Projects", text: "Products I build and maintain myself, from a Git client for Mac to Flutter packages.", live: "Live demo", code: "GitHub", privateCode: "Code private", items: projectsEn },
+    work: { title: "Projects", text: "Products I build and maintain myself, from a Git client for Mac to Flutter packages.", live: "Live demo", code: "GitHub", privateCode: "Code private", page: "Explore the project", items: projectsEn },
     contact: {
       title: "Let's talk",
       text: "Describe the project in a few lines: what it should do, who it is for, when you need it. I answer personally.",
@@ -130,7 +135,7 @@ export const copy: Record<Lang, Copy> = {
       hint: "Scrivi un comando",
       welcome: "breight-code shell. Scrivi help per la lista dei comandi.",
     },
-    work: { title: "Progetti", text: "Prodotti che sviluppo e mantengo io, dal client Git per Mac ai package Flutter.", live: "Demo live", code: "GitHub", privateCode: "Codice privato", items: projectsIt },
+    work: { title: "Progetti", text: "Prodotti che sviluppo e mantengo io, dal client Git per Mac ai package Flutter.", live: "Demo live", code: "GitHub", privateCode: "Codice privato", page: "Scopri il progetto", items: projectsIt },
     contact: {
       title: "Parliamone",
       text: "Descrivi il progetto in due righe: cosa deve fare, per chi, entro quando. Rispondo io, personalmente.",

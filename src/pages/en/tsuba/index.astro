@@ -1,0 +1,9 @@
+---
+import Base from "../../../layouts/Base.astro";
+import TsubaPage from "../../../components/TsubaPage.astro";
+import { tsuba, tsubaPaths, tsubaSchema } from "../../../content/tsuba";
+const t = tsuba.en;
+---
+<Base lang="en" title={t.meta.title} description={t.meta.description} alternates={tsubaPaths.home} image="/tsuba/og.png" imageAlt={t.hero.h1} jsonLd={tsubaSchema("en", "home")} themeColor="#121314">
+  <TsubaPage lang="en" />
+</Base>

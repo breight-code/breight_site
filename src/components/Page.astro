@@ -6,7 +6,7 @@ import Terminal from "./Terminal";
 import Work from "./Work";
 import CodeType from "./CodeType";
 import HeroBackdrop from "./HeroBackdrop";
-import { copy, developerCode, links, type Lang } from "../content/site";
+import { arrowSvg as arrow, copy, developerCode, links, markSvg as mark, type Lang } from "../content/site";
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
@@ -14,8 +14,6 @@ const t = copy[lang];
 const other = lang === "it" ? "/en/" : "/";
 const year = new Date().getFullYear();
 const mail = `mailto:${links.email}?subject=${encodeURIComponent(t.contact.mailSubject)}`;
-const mark = `<svg class="mark" viewBox="10 8 46 46" aria-hidden="true"><path d="M17 12v24" stroke="currentColor" stroke-width="7" stroke-linecap="round"/><circle cx="27.5" cy="36" r="10.5" fill="none" stroke="currentColor" stroke-width="7"/><rect class="mark-cursor" x="42" y="43" width="11" height="6" rx="1.5" fill="currentColor"/></svg>`;
-const arrow = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg>`;
 ---
 <a class="skip" href="#main">{lang === "it" ? "Vai al contenuto" : "Skip to content"}</a>
 <header class="bar" data-ink="night">
@@ -74,7 +72,7 @@ const arrow = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke
       <h2 id="work-title" class="head" data-reveal>{t.work.title}</h2>
       <p data-reveal style="--i:1">{t.work.text}</p>
     </div>
-    <Work client:visible items={t.work.items} labels={{ live: t.work.live, code: t.work.code, privateCode: t.work.privateCode }} />
+    <Work client:visible items={t.work.items} labels={{ live: t.work.live, code: t.work.code, privateCode: t.work.privateCode, page: t.work.page }} />
   </section>
 
   <section class="chapter contact" data-ink="night" id="contact" aria-labelledby="contact-title">
@@ -121,28 +119,3 @@ const arrow = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke
   </div>
 </footer>
 
-<script>
-  // Entrances once per element; header takes the ink of the chapter under it.
-  const reveal = new IntersectionObserver(
-    (entries) => entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("in"); reveal.unobserve(e.target); } }),
-    { threshold: 0.01 },
-  );
-  const seen = new WeakSet<Element>();
-  const watch = () =>
-    document.querySelectorAll("[data-reveal]:not(.in), [data-reveal-mail]:not(.in)").forEach((el) => {
-      // Re-observing an element resets its pending entry, so observe each one once.
-      if (seen.has(el)) return;
-      seen.add(el);
-      reveal.observe(el);
-    });
-  watch();
-  // React islands hydrate later and may add new targets.
-  new MutationObserver(watch).observe(document.body, { childList: true, subtree: true });
-
-  const bar = document.querySelector<HTMLElement>(".bar")!;
-  const ink = new IntersectionObserver(
-    (entries) => entries.forEach((e) => { if (e.isIntersecting) bar.dataset.ink = (e.target as HTMLElement).dataset.ink; }),
-    { rootMargin: "-32px 0px -95% 0px" },
-  );
-  document.querySelectorAll("main > [data-ink], body > footer[data-ink]").forEach((el) => ink.observe(el));
-</script>
