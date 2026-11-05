@@ -43,16 +43,12 @@ type Copy = {
 
 const projectsEn: Project[] = [
   { slug: "tsuba", title: "Tsuba", kind: "macOS app", status: "Version 0.8", description: "The native Git client for Mac. Commit graph, line staging, interactive rebase and 3-way merge in one fast window, with AI commit messages that stay on device.", stack: ["Swift", "SwiftUI", "Git", "Apple Intelligence"] },
-  { slug: "flutter-showcase", title: "Flutter Showcase", kind: "Mobile apps", status: "Upcoming", description: "A collection of Flutter screens and patterns: complex animations, state management with BLoC, real API integrations. One app to try them all.", stack: ["Flutter", "Dart", "Animations", "Firebase"] },
-  { slug: "breight-code", title: "br(e)ight-code.it", kind: "Website", status: "Live", description: "This site. Static HTML from Astro, React islands for the interactive parts, animations with Motion. The source is public.", stack: ["Astro", "React", "TypeScript", "Motion"], live: links.site, code: "https://github.com/breight-code/breight_site" },
   { slug: "dio-shaker", title: "Dio Shaker Interceptor", kind: "Flutter package", status: "Published on pub.dev", description: "A Flutter package for the Dio HTTP client: shake the device to open a debugger with every request and response.", stack: ["Flutter", "Dart", "Networking", "Debugging"], live: "https://pub.dev/packages/dio_shaker_interceptor", code: links.github },
 ];
 
 const projectsIt: Project[] = [
   { ...projectsEn[0], kind: "App macOS", status: "Versione 0.8", description: "Il client Git nativo per Mac. Grafo dei commit, staging per riga, rebase interattivo e merge a tre vie in una finestra veloce, con messaggi di commit AI che restano sul dispositivo." },
-  { ...projectsEn[1], kind: "App mobile", status: "In arrivo", description: "Una raccolta di schermate e pattern Flutter: animazioni complesse, gestione dello stato con BLoC, integrazioni API reali. Un'app sola per provarli tutti." },
-  { ...projectsEn[2], kind: "Sito web", status: "Online", description: "Questo sito. HTML statico generato con Astro, isole React per le parti interattive, animazioni con Motion. Il sorgente è pubblico." },
-  { ...projectsEn[3], kind: "Package Flutter", status: "Pubblicato su pub.dev", description: "Un package Flutter per il client HTTP Dio: scuoti il device e si apre un debugger con ogni richiesta e risposta." },
+  { ...projectsEn[1], kind: "Package Flutter", status: "Pubblicato su pub.dev", description: "Un package Flutter per il client HTTP Dio: scuoti il device e si apre un debugger con ogni richiesta e risposta." },
 ];
 
 const lanesEn: Lane[] = [

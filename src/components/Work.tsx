@@ -4,21 +4,6 @@ import type { Project } from "../content/site";
 
 const ease = [0.23, 1, 0.32, 1] as const;
 
-function SiteFrag() {
-  return (
-    <div className="frag f-site" data-ui>
-      <div className="browser-bar"><i /><i /><i /><span>breight-code.it</span></div>
-      <div className="mini-hero">
-        <div className="display"><span>br(e)ight</span><span>code</span></div>
-        <p>Custom software: apps, backends and tools.</p>
-      </div>
-      <motion.div className="mini-band" initial={{ y: "100%" }} whileInView={{ y: "0%" }} transition={{ duration: 0.9, ease, delay: 0.2 }}>
-        <div className="display">Apps Backends Tools</div>
-      </motion.div>
-    </div>
-  );
-}
-
 const CALLS = [
   { m: "GET", p: "/api/v1/projects", s: "200", t: "84ms" },
   { m: "POST", p: "/api/v1/auth/token", s: "201", t: "132ms" },
@@ -58,47 +43,6 @@ function ShakerFrag({ live }: { live: boolean }) {
           <div className="shake-hint"><span>Shake to inspect</span><b>dio_shaker</b></div>
         </div>
       </motion.div>
-    </div>
-  );
-}
-
-function ShowFrag({ live }: { live: boolean }) {
-  const reduce = useReducedMotion();
-  const loop = live && !reduce;
-  const heights = [40, 70, 55, 90, 65, 100, 80];
-  return (
-    <div className="frag f-show" data-ui>
-      <div className="phone">
-        <div className="phone-screen">
-          <div className="phone-notch" />
-          <div className="app-head">Showcase <small>12 patterns</small></div>
-          <div className="widgets">
-            <div className="wide">
-              <b>Weekly builds</b>
-              <div className="bars">
-                {heights.map((h, i) => (
-                  <motion.span key={i} style={{ height: `${h}%` }} animate={loop ? { scaleY: [1, 0.55, 1] } : undefined} transition={{ duration: 2.2, repeat: Infinity, delay: i * 0.15, ease: "easeInOut" }} />
-                ))}
-              </div>
-            </div>
-            <div>
-              <b>Coverage</b>
-              <svg className="ring" viewBox="0 0 40 40" aria-hidden="true">
-                <circle cx="20" cy="20" r="16" fill="none" stroke="#d8ddd2" strokeWidth="6" />
-                <motion.circle cx="20" cy="20" r="16" fill="none" stroke="#0a0c0a" strokeWidth="6" strokeLinecap="round" pathLength={1} transform="rotate(-90 20 20)" initial={{ pathLength: 0 }} animate={live ? { pathLength: 0.86 } : undefined} transition={{ duration: 1.4, ease }} />
-              </svg>
-            </div>
-            <div className="accent">
-              <b>Dark mode</b>
-              <div className="toggle"><motion.i animate={loop ? { x: [0, 16, 16, 0, 0] } : undefined} transition={{ duration: 3, repeat: Infinity, times: [0, 0.15, 0.5, 0.65, 1] }} /></div>
-            </div>
-            <div className="wide">
-              <b>Hero transition</b>
-              <motion.div style={{ height: 8, borderRadius: 4, background: "#58f36a", transformOrigin: "left" }} animate={loop ? { scaleX: [0.1, 1, 0.1] } : undefined} transition={{ duration: 2.6, repeat: Infinity, ease: [0.77, 0, 0.175, 1] }} />
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }
@@ -160,10 +104,7 @@ function TsubaFrag({ live }: { live: boolean }) {
 }
 
 function Fragment({ slug, live }: { slug: string; live: boolean }) {
-  if (slug === "tsuba") return <TsubaFrag live={live} />;
-  if (slug === "dio-shaker") return <ShakerFrag live={live} />;
-  if (slug === "flutter-showcase") return <ShowFrag live={live} />;
-  return <SiteFrag />;
+  return slug === "tsuba" ? <TsubaFrag live={live} /> : <ShakerFrag live={live} />;
 }
 
 function ProjectBlock({ p, labels, active, onActive }: { p: Project; labels: { live: string; code: string; privateCode: string }; active: boolean; onActive: () => void }) {
