@@ -76,7 +76,7 @@ export type TsubaCopy = {
   commit: CommitCopy;
   native: { heading: string; items: Item[]; privacy: string };
   themes: { heading: string; lead: string; label: string };
-  download: { heading: string; lead: string; button: string; req: string; steps: string[]; command: string; sparkle: string; releases: string };
+  download: { heading: string; lead: string; button: string; busy: string; done: string; noteCheck: string; noteNot: string; noteGithub: string; noteSteps: string; req: string; steps: string[]; command: string; sparkle: string; releases: string };
   faq: { heading: string; items: Faq[] };
   footer: { note: string; privacy: string; releases: string };
   // Alt text of each screenshot, describing the UI language of that page.
@@ -184,6 +184,12 @@ export const tsuba: Record<Lang, TsubaCopy> = {
       heading: "Scarica Tsuba",
       lead: "Un archivio ZIP con l'app universale, per Mac Apple silicon e Intel. Pochi passaggi al primo avvio.",
       button: "Scarica per macOS",
+      busy: "Avvio download…",
+      done: "Download avviato",
+      noteCheck: "Controlla i download del browser.",
+      noteNot: "Non parte?",
+      noteGithub: "Scaricalo da GitHub",
+      noteSteps: "Come aprirlo la prima volta",
       req: "Richiede macOS 14 Sonoma o successivo e git installato. I messaggi di commit con Apple Intelligence richiedono macOS 26.",
       steps: [
         "Decomprimi <code>Tsuba.zip</code> e sposta <code>Tsuba.app</code> in Applicazioni.",
@@ -351,6 +357,12 @@ export const tsuba: Record<Lang, TsubaCopy> = {
       heading: "Download Tsuba",
       lead: "A ZIP with the universal app, for Apple silicon and Intel Macs. A few steps on first launch.",
       button: "Download for macOS",
+      busy: "Starting download…",
+      done: "Download started",
+      noteCheck: "Check your browser's downloads.",
+      noteNot: "Not starting?",
+      noteGithub: "Get it from GitHub",
+      noteSteps: "How to open it the first time",
       req: "Requires macOS 14 Sonoma or later and git installed. Apple Intelligence commit messages need macOS 26.",
       steps: [
         "Unzip <code>Tsuba.zip</code> and move <code>Tsuba.app</code> to Applications.",

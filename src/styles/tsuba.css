@@ -72,6 +72,25 @@
   transition: transform 160ms var(--ease-out), filter 200ms ease;
 }
 .ts-btn svg { width: 18px; height: 18px; flex: none; }
+
+/* Download feedback: icon and label are stacked in one grid cell, so the button never changes width. */
+.ts-ico, .ts-lbls { display: grid; }
+.ts-ico { width: 18px; height: 18px; flex: none; }
+.ts-ico > *, .ts-lbls > * { grid-area: 1 / 1; opacity: 0; visibility: hidden; transform: scale(0.6);
+  transition: opacity 180ms ease, transform 180ms var(--ease-out), visibility 0s 180ms; }
+.ts-lbls > * { transform: none; white-space: nowrap; }
+[data-state="idle"] .i-idle, [data-state="idle"] .l-idle,
+[data-state="busy"] .i-busy, [data-state="busy"] .l-busy,
+[data-state="done"] .i-done, [data-state="done"] .l-done { opacity: 1; visibility: visible; transform: none; transition-delay: 0s; }
+.i-busy { box-sizing: border-box; border: 2.2px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: ts-spin 700ms linear infinite; }
+@keyframes ts-spin { to { transform: rotate(360deg); } }
+.ts-btn[aria-busy="true"] { pointer-events: none; }
+.ts-dl { display: grid; justify-items: start; }
+.ts-dl-note { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 240ms var(--ease-out), opacity 240ms ease; opacity: 0; }
+.ts-dl-note.on { grid-template-rows: 1fr; opacity: 1; }
+.ts-dl-note > div { overflow: hidden; }
+.ts-dl-note p { margin: 12px 0 0; width: max-content; max-width: min(60ch, calc(100vw - 2 * var(--ts-m))); font-size: 0.875rem; color: var(--ts-muted); }
+.ts-dl-note a { text-decoration: underline; text-underline-offset: 3px; }
 .ts-btn:active { transform: scale(0.97); }
 .ts-btn-lg { min-height: 56px; padding: 0 28px; font-size: 1.0625rem; }
 .ts-link {
@@ -119,7 +138,8 @@
 .ts-hero-grid { display: grid; gap: clamp(24px, 3vw, 36px); }
 .ts-hero-grid > div { max-width: 560px; }
 .ts-hero .ts-lead { margin-bottom: 28px; }
-.ts-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 28px; }
+.ts-actions { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 16px 28px; }
+.ts-actions .ts-link { display: inline-flex; align-items: center; min-height: 48px; }
 .ts-hero .ts-note { margin-top: 20px; }
 
 .ts-title { font-size: clamp(5.5rem, 2.5rem + 12vw, 13rem); font-weight: 720; font-variation-settings: "wdth" 112; line-height: 0.8; letter-spacing: -0.055em; margin-left: -0.05em; }
@@ -164,6 +184,18 @@ html.js .ts-lanes .pulse.go { stroke-opacity: 0.95; animation: ts-pulse var(--du
 @media (prefers-reduced-motion: reduce) { .ts-lanes * { animation: none !important; } }
 /* Phones: the text sits on top of the graph, so it steps back. */
 @media (max-width: 860px) { .ts-lanes { opacity: 0.35; } }
+
+/* Tsuba guard behind the graph: copper ink line art, drawn once, then turning very slowly */
+.ts-lanes .ts-guard * { fill: none; stroke: var(--ts-accent); stroke-linecap: round; stroke-dasharray: 1; }
+.ts-lanes .ts-guard .rim { stroke-width: 7; stroke-opacity: 0.42; }
+.ts-lanes .ts-guard .mimi { stroke-width: 1.5; stroke-opacity: 0.26; }
+.ts-lanes .ts-guard .seppa { stroke-width: 2; stroke-opacity: 0.3; }
+.ts-lanes .ts-guard .ana { stroke-width: 3; stroke-opacity: 0.38; }
+/* Higher specificity than the generic .ts-lanes path/circle draw rules, so the guard keeps its own delays */
+html.js .ts-lanes .ts-guard * { animation: ts-draw 1.6s var(--ease-out) var(--d, 0s) both; }
+html.js .ts-guard { transform-box: view-box; transform-origin: 1210px 400px; animation: ts-turn 160s linear 2.5s infinite; }
+.ts-lanes.idle .ts-guard { animation-play-state: paused; }
+@keyframes ts-turn { to { transform: rotate(360deg); } }
 
 /* Screenshots: real windows with transparent corners, so the shadow follows their shape */
 .ts-frame img { width: 100%; height: auto; filter: drop-shadow(0 28px 44px rgb(0 0 0 / 0.5)) drop-shadow(0 2px 6px rgb(0 0 0 / 0.35)); }
@@ -349,6 +381,28 @@ html.js .ts-lanes .pulse.go { stroke-opacity: 0.95; animation: ts-pulse var(--du
 .ts-sparkle { margin: 40px 0 16px; }
 @media (max-width: 860px) { .ts-download { grid-template-columns: 1fr; } }
 
+/* Hanko seal stamped on the app icon's corner: stamps in once when revealed */
+.ts-dl-mark { position: relative; width: fit-content; margin-bottom: 28px; }
+.ts-dl-mark .ts-dl-icon { margin-bottom: 0; }
+.ts-hanko {
+  position: absolute; right: -22px; bottom: -12px; display: grid; place-items: center;
+  width: 56px; height: 56px; border-radius: 8px; transform: rotate(-6deg);
+  background: var(--ts-accent); color: var(--ts-bg);
+  font: 700 34px/1 "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--ts-bg) 35%, transparent);
+}
+.ts-hanko::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; box-shadow: 0 0 0 0 color-mix(in srgb, var(--ts-accent) 40%, transparent); }
+html.js .ts-hanko[data-reveal].in { transition: none; animation: ts-stamp 520ms var(--ease-out) both; }
+html.js .ts-hanko[data-reveal].in::after { animation: ts-ring 600ms var(--ease-out) 300ms both; }
+@keyframes ts-stamp {
+  0% { opacity: 0; transform: rotate(-14deg) scale(1.7); }
+  60% { opacity: 1; transform: rotate(-5deg) scale(0.92); }
+  100% { opacity: 1; transform: rotate(-6deg) scale(1); }
+}
+@keyframes ts-ring { to { box-shadow: 0 0 0 14px transparent; } }
+@media (max-width: 560px) { .ts-hanko { width: 48px; height: 48px; font-size: 29px; } }
+@media (prefers-reduced-motion: reduce) { html.js .ts-hanko[data-reveal].in, html.js .ts-hanko[data-reveal].in::after { animation: none; } }
+
 /* FAQ */
 .ts-faq { padding-top: 0; }
 .ts-faq-grid { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 7fr); gap: 32px clamp(48px, 7vw, 112px); padding-top: clamp(64px, 8vw, 112px); border-top: 1px solid var(--ts-border); }
@@ -399,5 +453,6 @@ html.js .ts-lanes .pulse.go { stroke-opacity: 0.95; animation: ts-pulse var(--du
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ts-faq summary::after, .ts-tile, .ts-btn, .mg-tool, .mg-gb { transition: none; }
+  .ts-faq summary::after, .ts-tile, .ts-btn, .mg-tool, .mg-gb, .ts-ico > *, .ts-lbls > *, .ts-dl-note { transition: none; }
+  .i-busy { animation: none; }
 }
