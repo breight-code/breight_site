@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://breight-code.it/sitemap-index.xml
