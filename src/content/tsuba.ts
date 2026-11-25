@@ -76,6 +76,8 @@ export type TsubaCopy = {
   commit: CommitCopy;
   native: { heading: string; items: Item[]; privacy: string };
   themes: { heading: string; lead: string; label: string };
+  // Rows line up with compareMarks below.
+  compare: { heading: string; lead: string; feature: string; yes: string; partial: string; no: string; rows: string[]; note: string };
   download: { heading: string; lead: string; button: string; busy: string; done: string; noteCheck: string; noteNot: string; noteGithub: string; noteSteps: string; req: string; steps: string[]; command: string; sparkle: string; releases: string };
   faq: { heading: string; items: Faq[] };
   footer: { note: string; privacy: string; releases: string };
@@ -179,6 +181,26 @@ export const tsuba: Record<Lang, TsubaCopy> = {
       heading: "Dieci temi, ognuno con un gemello chiaro",
       lead: "Tsuba ha dieci temi di colore. Ognuno ha una versione scura e una chiara, e macOS sceglie quale mostrare. Provane uno su questa pagina: gli screenshot restano in Akagane, il tema predefinito.",
       label: "Temi di Tsuba",
+    },
+    compare: {
+      heading: "Tsuba e gli altri client Git",
+      lead: "Le funzioni che contano nel lavoro di ogni giorno, messe accanto a cinque dei client Git più usati su Mac.",
+      feature: "Funzione",
+      yes: "Sì",
+      partial: "In parte",
+      no: "No",
+      rows: [
+        "App nativa per Mac",
+        "Più repository in schede",
+        "Staging per riga",
+        "Rebase interattivo",
+        "Editor di merge a tre vie integrato",
+        "Annulla l'ultima operazione",
+        "Bisect guidato",
+        "Messaggi di commit con AI sul Mac",
+        "Usa git da riga di comando",
+      ],
+      note: "GitHub Desktop unisce e riordina i commit ma non ha un rebase interattivo completo, e annulla solo l'ultimo commit. Tower, Sourcetree e GitHub Desktop fanno scegliere un lato per file e aprono un tool esterno per i blocchi. GitKraken usa un motore suo per molte operazioni. GitKraken e GitHub Desktop scrivono i messaggi di commit con AI nel cloud. Confronto basato sulle funzioni pubbliche di ciascun client, novembre 2026.",
     },
     download: {
       heading: "Scarica Tsuba",
@@ -353,6 +375,26 @@ export const tsuba: Record<Lang, TsubaCopy> = {
       lead: "Tsuba ships ten colour themes. Each has a dark set and a light twin, and macOS picks which one shows. Try one on this page: the screenshots stay in Akagane, the default.",
       label: "Tsuba themes",
     },
+    compare: {
+      heading: "Tsuba and the other Git clients",
+      lead: "The features that matter day to day, next to five of the most used Git clients on Mac.",
+      feature: "Feature",
+      yes: "Yes",
+      partial: "Partly",
+      no: "No",
+      rows: [
+        "Native Mac app",
+        "Several repositories in tabs",
+        "Line-level staging",
+        "Interactive rebase",
+        "Built-in three-way merge editor",
+        "Undo the last operation",
+        "Guided bisect",
+        "AI commit messages on your Mac",
+        "Runs the git command line",
+      ],
+      note: "GitHub Desktop squashes and reorders commits but has no full interactive rebase, and undoes only the last commit. Tower, Sourcetree and GitHub Desktop let you pick a side per file and open an external tool for chunks. GitKraken uses its own engine for many operations. GitKraken and GitHub Desktop write AI commit messages in the cloud. Based on each client's public features, November 2026.",
+    },
     download: {
       heading: "Download Tsuba",
       lead: "A ZIP with the universal app, for Apple silicon and Intel Macs. A few steps on first launch.",
@@ -432,6 +474,20 @@ export const tsuba: Record<Lang, TsubaCopy> = {
     },
   },
 };
+
+// Comparison grid: Tsuba has every row; 1 = yes, 0.5 = partly, 0 = no for each other client, row by row as in compare.rows.
+export const compareClients = ["GitKraken", "Tower", "Fork", "Sourcetree", "GitHub Desktop"];
+export const compareMarks: number[][] = [
+  [0, 1, 1, 1, 0],
+  [1, 1, 1, 1, 0],
+  [1, 1, 1, 1, 1],
+  [1, 1, 1, 1, 0.5],
+  [1, 0.5, 1, 0.5, 0.5],
+  [1, 1, 0, 0, 0.5],
+  [0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0],
+  [0.5, 1, 1, 1, 1],
+];
 
 // Structured data for the Tsuba pages. The app page carries the FAQ; the privacy page only the breadcrumb.
 export function tsubaSchema(lang: Lang, page: "home" | "privacy"): object[] {
