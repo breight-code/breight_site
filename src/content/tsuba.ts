@@ -198,9 +198,10 @@ export const tsuba: Record<Lang, TsubaCopy> = {
         "Annulla l'ultima operazione",
         "Bisect guidato",
         "Messaggi di commit con AI sul Mac",
+        "Conflitti risolti con AI",
         "Usa git da riga di comando",
       ],
-      note: "GitHub Desktop unisce e riordina i commit ma non ha un rebase interattivo completo, e annulla solo l'ultimo commit. Tower, Sourcetree e GitHub Desktop fanno scegliere un lato per file e aprono un tool esterno per i blocchi. GitKraken usa un motore suo per molte operazioni. GitKraken e GitHub Desktop scrivono i messaggi di commit con AI nel cloud. Confronto basato sulle funzioni pubbliche di ciascun client, novembre 2026.",
+      note: "GitHub Desktop unisce e riordina i commit ma non ha un rebase interattivo completo, e annulla solo l'ultimo commit. Tower, Sourcetree e GitHub Desktop fanno scegliere un lato per file e aprono un tool esterno per i blocchi. GitKraken usa un motore suo per molte operazioni. GitKraken, Tower e Fork scrivono i messaggi di commit con AI nel cloud; GitHub Desktop può usare un modello locale se lo configuri tu. In GitKraken la risoluzione dei conflitti con AI è in anteprima. Confronto basato sui siti e sulle note di rilascio di ciascun client, novembre 2026.",
     },
     download: {
       heading: "Scarica Tsuba",
@@ -391,9 +392,10 @@ export const tsuba: Record<Lang, TsubaCopy> = {
         "Undo the last operation",
         "Guided bisect",
         "AI commit messages on your Mac",
+        "AI conflict resolution",
         "Runs the git command line",
       ],
-      note: "GitHub Desktop squashes and reorders commits but has no full interactive rebase, and undoes only the last commit. Tower, Sourcetree and GitHub Desktop let you pick a side per file and open an external tool for chunks. GitKraken uses its own engine for many operations. GitKraken and GitHub Desktop write AI commit messages in the cloud. Based on each client's public features, November 2026.",
+      note: "GitHub Desktop squashes and reorders commits but has no full interactive rebase, and undoes only the last commit. Tower, Sourcetree and GitHub Desktop let you pick a side per file and open an external tool for chunks. GitKraken uses its own engine for many operations. GitKraken, Tower and Fork write AI commit messages in the cloud; GitHub Desktop can use a local model if you set one up. GitKraken's AI conflict resolution is in preview. Based on each client's website and release notes, November 2026.",
     },
     download: {
       heading: "Download Tsuba",
@@ -484,8 +486,9 @@ export const compareMarks: number[][] = [
   [1, 1, 1, 1, 0.5],
   [1, 0.5, 1, 0.5, 0.5],
   [1, 1, 0, 0, 0.5],
-  [0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0],
+  [0, 0, 1, 0, 0],
+  [0, 0, 0, 0, 0.5],
+  [1, 0, 0, 0, 1],
   [0.5, 1, 1, 1, 1],
 ];
 
